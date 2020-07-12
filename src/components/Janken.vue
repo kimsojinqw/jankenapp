@@ -35,8 +35,7 @@ export default {
             }
   },
   methods:{
-      
-      changeImg(number) {
+    changeImg(number) {
                 // 画像の切替
                 if(number && Math.abs(number) <= this.imgList.length) {
                     this.src = this.imgList[number];
@@ -44,33 +43,33 @@ export default {
                     var num = Math.floor(Math.random() * this.imgList.length);
                     this.src = this.imgList[num];
                 }
-      },
+    },
       gameStart() { //スタートボタンが押されたときの処理
-          this.timer = setInterval(this.changeImg,80)
-          document.getElementById('gameStart').setAttribute('disabled', true)
-          let btns = document.querySelectorAll('.button');
-          for( let btn of btns ) {
+        this.timer = setInterval(this.changeImg,80);
+        document.getElementById('gameStart').setAttribute('disabled', true);
+        let btns = document.querySelectorAll('.button');
+        for( let btn of btns ) {
                     btn.removeAttribute('disabled');
                 }
-      },
-      onSelected() {
-          clearInterval(this.timer)
-          let btns = document.querySelectorAll('.button');
+    },
+    onSelected(e) {
+        clearInterval(this.timer);
+        let btns = document.querySelectorAll('.button');
                 for( let btn of btns ) {
                     btn.setAttribute('disabled', true);
                 }
-          document.getElementById('gameStart').removeAttribute('disabled')
-          //let button = e.target
+        document.getElementById('gameStart').removeAttribute('disabled');
+        let button = e.target;
           //window.console.log(this.src)
-          //let resultNum = parseInt(this.imgList.indexOf(this.src), 10)
-          //let selectNum = parseInt(button.value, 10) /* 第一引数に渡した値を10進数に変換して返す */
-          //let kekkaNum = this.decisionJanken(selectNum, resultNum)
-
+        let resultNum = parseInt(this.imgList.indexOf(this.src), 10); //컴퓨터
+        let selectNum = parseInt(button.value, 10) ;  /* 第一引数に渡した値を10進数に変換して返す  나*/ 
+        let kekkaNum = this.decisionJanken(selectNum, resultNum);
+        console.log(kekkaNum);
+        this.$store.commit("onSelected", kekkaNum);//decisionJanken=result=결과  / commit 안하면 뷰엑스는 영원히 기동안함 보내는게 없으니까!
           //window.console.log('勝ち負け(0 は負け, 1は勝ち,2は引き分け)→' + this.decisionJanken(selectNum, resultNum))
-      },
-      decisionJanken(myHand, cpuHand) {
+    },
+    decisionJanken(myHand, cpuHand) {
                 let result = 0; // 0 は負け, 1は勝ち,2は引き分け
- 
                 switch(myHand) {
                     case 0://自分がぐー(0)のとき
                     if(cpuHand===0){
@@ -101,25 +100,30 @@ export default {
                 }
                 return result;
             }
-  }
-}
+    },
+computed:{
+    score() {
+        return this.$store.getters.score;
+        }
+    }
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 h3 {
-  margin: 40px 0 0;
+    margin: 40px 0 0;
 }
 ul {
-  list-style-type: none;
-  padding: 0;
+    list-style-type: none;
+    padding: 0;
 }
 li {
-  display: inline-block;
-  margin: 0 10px;
+    display: inline-block;
+    margin: 0 10px;
 }
 a {
-  color: #42b983;
+    color: #42b983;
 }
 .imgArea{
     height: 300px;
